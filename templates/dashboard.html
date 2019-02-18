@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head></head>
+<body>
+    <div>
+        {% if questions %}
+            <h3>now questions</h3>
+            <ul>
+                {% for q in questions %}
+                <li>{{q.detail}} : {{q.answer}}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    </div>
+    <div>
+        {% if user_questions %}
+            <h3>your questions</h3>
+            <ul>
+                {% for q in user_questions %}
+                <li>{{q.detail}} : {{q.answer}}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    </div>
+</body>
+</html>
