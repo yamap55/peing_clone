@@ -6,6 +6,7 @@ from flask_login import LoginManager, logout_user, login_user, login_required, c
 from models.user import User
 from models.question import Question
 from database import init_db, db
+from util.hash_util import create_salt, calculate_password_hash, compare_password
 
 app = Flask(__name__)
 # セッションを使うためにシークレットキーが必要です
@@ -21,10 +22,17 @@ app.app_context().push()
 
 
 def add_user():
+
+    def create_user(name, password):
+        salt = create_salt()
+        password_hash = calculate_password_hash(password, salt)
+        return User(name=name, password_hash=password_hash, salt=salt)
+
     db.create_all()
-    user1 = User(name='a', password="aa")
-    user2 = User(name='b', password="bb")
-    user3 = User(name='c', password="cc")
+
+    user1 = create_user('a', "aa")
+    user2 = create_user('b', "bb")
+    user3 = create_user('c', "cc")
     db.session.add(user1)
     db.session.add(user2)
     db.session.add(user3)
@@ -44,7 +52,6 @@ login_manager.login_view = 'login'
 def load_user(user_id):
     print('load_user  user_id : {}'.format(user_id))
     return User.query.get(user_id)
-    # return session.query(User).filter_by(id=user_id).one()
 
 
 @app.route('/form', methods=['GET'])
@@ -65,8 +72,8 @@ def login():
     if form.validate_on_submit():
         print('Validated')
         # print('{}, {}'.format(form.name.data, form.password.data))
-        users = User.query.filter_by(name=form.name.data, password=form.password.data).all()
-        if len(users) > 0:
+        users = User.query.filter_by(name=form.name.data).all()
+        if len(users) > 0 and compare_password(form.password.data, users[0].password_hash, users[0].salt):
             login_user(users[0])
             return redirect(url_for('dashboard'))
     else:
@@ -85,7 +92,7 @@ def dashboard():
         print(current_user.id)
         print(current_user.get_id())
         print(current_user.name)
-        print(current_user.password)
+        print(current_user.password_hash)
         print([u.user_id for u in Question.query.all()])
         print(Question.query.filter_by(user_id=current_user.id).all())
         user_questions = Question.query.filter_by(user_id=current_user.id).all()
@@ -106,7 +113,7 @@ def hello_world():
 
 if __name__ == '__main__':
     for u in User.query.all():
-        print('{}, {}, {}, {}'.format(u.id, u.name, u.created_at, u.updated_at))
+        print('{}, {}, {}, {}'.format(u.id, u.name, u.password_hash, u.salt, u.created_at, u.updated_at))
         print(u.questions)
 
     app.run()

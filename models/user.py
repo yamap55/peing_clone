@@ -17,6 +17,7 @@ class User(UserMixin, db.Model):
     get_datetime_now = lambda: datetime.now(timezone(timedelta(hours=+9), 'JST'))
     id = Column(Integer, Sequence('seq_user_id'), primary_key=True)
     name = Column(VARCHAR(255), nullable=False)
-    password = Column(VARCHAR(255), nullable=False)
+    password_hash = Column(VARCHAR(128), nullable=False)
+    salt = Column(VARCHAR(50), nullable=False)
     created_at = Column(DATETIME, nullable=False, default=get_datetime_now)
     updated_at = Column(DATETIME, nullable=False, default=get_datetime_now, onupdate=get_datetime_now)
