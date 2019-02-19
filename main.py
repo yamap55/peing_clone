@@ -11,7 +11,7 @@ from util.hash_util import create_salt, calculate_password_hash, compare_passwor
 app = Flask(__name__)
 # セッションを使うためにシークレットキーが必要です
 app.secret_key = 'secret key'
-db_name = 'work/test.db'
+db_name = 'test.db'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///{}'.format(db_name)
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 if os.path.exists(db_name):
