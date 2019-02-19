@@ -7,6 +7,7 @@
 git clone git@github.com:yamap55/peing_clone.git
 cd peing_clone
 python -m venv .venv
+source .venv/bin/activate # .venv\Scripts\activate
 pip install -r requirements.txt
 python main.py
 ```
