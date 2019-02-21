@@ -81,6 +81,11 @@ def login():
     return render_template('login.html', form=form)
 
 
+@app.route('/', methods=['GET'])
+def root():
+    return redirect(url_for('dashboard'))
+
+
 @app.route('/dashboard', methods=['GET'])
 def dashboard():
     questions = Question.query.all()
