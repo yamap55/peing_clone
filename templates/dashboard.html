@@ -2,6 +2,12 @@
 <html lang="ja">
 <head></head>
 <body>
+
+    {% if current_user.is_authenticated %}
+    <li><a href="{{ url_for('logout') }}">ログアウト</a></li>
+    {% else %}
+    <li><a href="{{ url_for('login') }}">ログイン</a></li>
+    {% endif %}
     <div>
         {% if questions %}
             <h3>now questions</h3>
