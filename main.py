@@ -111,11 +111,6 @@ def logout():
     return redirect(url_for('login'))
 
 
-@app.route('/hello')
-def hello_world():
-    return 'Hello, World!'
-
-
 if __name__ == '__main__':
     for u in User.query.all():
         print('{}, {}, {}, {}'.format(u.id, u.name, u.password_hash, u.salt, u.created_at, u.updated_at))
