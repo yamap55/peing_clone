@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head></head>
+<body>
+    {% if current_user.is_authenticated %}
+    <li><a href="{{ url_for('logout') }}">ログアウト</a></li>
+    {% else %}
+    <li><a href="{{ url_for('login') }}">ログイン</a></li>
+    {% endif %}
+    <div>
+        {% if user %}
+            <div>
+                <h3>ユーザ情報</h3>
+                <table border="1">
+                    <tr>
+                        <th>項目</th>
+                        <th>値</th>
+                    </tr>
+                    <tr>
+                        <td>id</td>
+                        <td>{{user.id}}</td>
+                    </tr>
+                    <tr>
+                        <td>name</td>
+                        <td>{{user.name}}</td>
+                    </tr>
+                </table>
+            </div>
+            <div>
+                {% if user.questions %}
+                    <h3>your questions</h3>
+                    <table border="1">
+                        <tr>
+                            <th>質問</th>
+                            <th>回答</th>
+                        </tr>
+                        {% for q in user.questions %}
+                        <tr>
+                            <td>{{q.detail}}</td>
+                            <td>{{q.answer}}</td>
+                        </tr>
+                        {% endfor %}
+                    </table>
+                {% else %}
+                    <p>質問してね</p>
+                {% endif %}
+            </div>
+       {% endif %}
+    </div>
+</body>
+</html>

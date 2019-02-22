@@ -105,11 +105,19 @@ def dashboard():
     return render_template('dashboard.html', questions=questions, user_questions=user_questions)
 
 
+@app.route('/user/<user_name>')
+def show_user_profile(user_name):
+    users = User.query.filter_by(name=user_name).all()
+    user = None if len(users) == 0 else users[0]
+    print(dir(user))
+    print(user.questions)
+    return render_template('user_profile.html', user=user)
+
+
 @app.route('/logout')
 def logout():
     logout_user()
     return redirect(url_for('login'))
-
 
 if __name__ == '__main__':
     for u in User.query.all():
