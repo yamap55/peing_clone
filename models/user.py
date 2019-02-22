@@ -3,7 +3,6 @@ from sqlalchemy import Column, Integer, Sequence, DATETIME, VARCHAR
 
 from datetime import datetime, timezone, timedelta
 
-# from . import BaseModel
 from database import db
 
 

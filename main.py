@@ -1,11 +1,12 @@
 import os
 
-from flask import Flask, render_template, redirect, url_for, request
-from flask_login import LoginManager, logout_user, login_user, login_required, current_user
+from flask import Flask, render_template, redirect, url_for
+from flask_login import LoginManager, logout_user, login_user, current_user
 
 from models.user import User
 from models.question import Question
 from database import init_db, db
+from forms.login_form import LoginForm
 from util.hash_util import create_salt, calculate_password_hash, compare_password
 
 app = Flask(__name__)
@@ -50,7 +51,6 @@ login_manager.login_view = 'login'
 
 @login_manager.user_loader
 def load_user(user_id):
-    print('load_user  user_id : {}'.format(user_id))
     return User.query.get(user_id)
 
 
@@ -66,19 +66,15 @@ def registration():
 
 @app.route('/login', methods=['POST', 'GET'])
 def login():
-    from forms.login_form import LoginForm
-    form = LoginForm()
-    print(request.form)
-    if form.validate_on_submit():
-        print('Validated')
-        # print('{}, {}'.format(form.name.data, form.password.data))
-        users = User.query.filter_by(name=form.name.data).all()
-        if len(users) > 0 and compare_password(form.password.data, users[0].password_hash, users[0].salt):
+    login_form = LoginForm()
+    if login_form.validate_on_submit():
+        users = User.query.filter_by(name=login_form.name.data).all()
+        if len(users) > 0 and compare_password(login_form.password.data, users[0].password_hash, users[0].salt):
             login_user(users[0])
             return redirect(url_for('dashboard'))
     else:
         print('Not Validated')
-    return render_template('login.html', form=form)
+    return render_template('login.html', form=login_form)
 
 
 @app.route('/', methods=['GET'])
@@ -90,16 +86,7 @@ def root():
 def dashboard():
     questions = Question.query.all()
     user_questions = []
-    print(current_user)
-    print(current_user.is_authenticated)
     if current_user.is_authenticated:
-        print(dir(current_user))
-        print(current_user.id)
-        print(current_user.get_id())
-        print(current_user.name)
-        print(current_user.password_hash)
-        print([u.user_id for u in Question.query.all()])
-        print(Question.query.filter_by(user_id=current_user.id).all())
         user_questions = Question.query.filter_by(user_id=current_user.id).all()
 
     return render_template('dashboard.html', questions=questions, user_questions=user_questions)
@@ -109,8 +96,6 @@ def dashboard():
 def show_user_profile(user_name):
     users = User.query.filter_by(name=user_name).all()
     user = None if len(users) == 0 else users[0]
-    print(dir(user))
-    print(user.questions)
     return render_template('user_profile.html', user=user)
 
 
@@ -119,8 +104,10 @@ def logout():
     logout_user()
     return redirect(url_for('login'))
 
+
 if __name__ == '__main__':
     for u in User.query.all():
+        # TODO debug
         print('{}, {}, {}, {}'.format(u.id, u.name, u.password_hash, u.salt, u.created_at, u.updated_at))
         print(u.questions)
 
