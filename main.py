@@ -103,7 +103,7 @@ def show_user_profile(user_name):
 @app.route('/logout')
 def logout():
     logout_user()
-    return redirect(url_for('login'))
+    return redirect(url_for('dashboard'))
 
 
 if __name__ == '__main__':
