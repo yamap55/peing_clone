@@ -38,6 +38,7 @@ def add_user():
     db.session.add(user2)
     db.session.add(user3)
     user1.questions = [Question(detail='x?', answer='yy!'), Question(detail='z?')]
+    user2.questions = [Question(detail='aaa?', answer='bbb!')]
     db.session.commit()
 
 
