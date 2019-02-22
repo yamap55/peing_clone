@@ -1,5 +1,5 @@
 from sqlalchemy import Column, Integer, Sequence, DATETIME, VARCHAR, ForeignKey
-from sqlalchemy.orm import relationship, backref
+from sqlalchemy.orm import relation, backref
 
 from datetime import datetime, timezone, timedelta
 
@@ -16,7 +16,7 @@ class Question(db.Model):
     user_id = Column(Integer, ForeignKey('users.id'))
 
     # UserとQuestionテーブルの関連を定義
-    student = relationship("User", backref=backref('questions', order_by=id))
+    student = relation("User", backref=backref('questions', order_by=id))
 
     created_at = Column(DATETIME, nullable=False, default=get_datetime_now)
     updated_at = Column(DATETIME, nullable=False, default=get_datetime_now, onupdate=get_datetime_now)
