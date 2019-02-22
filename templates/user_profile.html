@@ -10,11 +10,11 @@
     <div>
         {% if user %}
             <div>
-                <h3>ユーザ情報</h3>
+                <h3>user info</h3>
                 <table border="1">
                     <tr>
-                        <th>項目</th>
-                        <th>値</th>
+                        <th>key</th>
+                        <th>value</th>
                     </tr>
                     <tr>
                         <td>id</td>
@@ -31,8 +31,8 @@
                     <h3>your questions</h3>
                     <table border="1">
                         <tr>
-                            <th>質問</th>
-                            <th>回答</th>
+                            <th>question</th>
+                            <th>answer</th>
                         </tr>
                         {% for q in user.questions %}
                         <tr>
@@ -42,7 +42,7 @@
                         {% endfor %}
                     </table>
                 {% else %}
-                    <p>質問してね</p>
+                    <p>question please!</p>
                 {% endif %}
             </div>
        {% endif %}
