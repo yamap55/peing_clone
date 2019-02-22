@@ -11,11 +11,20 @@
     <div>
         {% if questions %}
             <h3>now questions</h3>
-            <ul>
+            <table border="1">
+                <tr>
+                    <th>user</th>
+                    <th>question</th>
+                    <th>answer</th>
+                </tr>
                 {% for q in questions %}
-                <li>{{q.detail}} : {{q.answer}}</li>
+                <tr>
+                    <td><a href="{{ url_for('show_user_profile',user_name=q.user.name) }}">{{q.user.name}}</a></td>
+                    <td>{{q.detail}}</td>
+                    <td>{{q.answer}}</td>
+                </tr>
                 {% endfor %}
-            </ul>
+            </table>
         {% endif %}
     </div>
     <div>
