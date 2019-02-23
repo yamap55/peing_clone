@@ -42,10 +42,12 @@
                         {% endfor %}
                     </table>
                 {% else %}
-                    <p>question please!</p>
+                    <p>question not found. question please!</p>
                 {% endif %}
             </div>
-       {% endif %}
+        {% else %}
+        <a>user not found. <a href="{{ url_for('dashboard') }}">question list is here!</a></p>
+        {% endif %}
     </div>
 </body>
 </html>
