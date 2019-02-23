@@ -10,6 +10,14 @@
     <div>
         {% if user %}
             <div>
+                <h3>question please!</h3>
+                <form action="{{ url_for('show_user_profile',user_name=user.name) }}" method="POST">
+                     {{ form.csrf_token }}
+                     {{ form.question }}
+                     <input type="submit" value="question">
+                </form>
+            </div>
+            <div>
                 <h3>user info</h3>
                 <table border="1">
                     <tr>

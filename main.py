@@ -7,6 +7,7 @@ from models.user import User
 from models.question import Question
 from database import init_db, db
 from forms.login_form import LoginForm
+from forms.question_form import QuestionForm
 from util.hash_util import create_salt, calculate_password_hash, compare_password
 
 app = Flask(__name__)
@@ -93,11 +94,20 @@ def dashboard():
     return render_template('dashboard.html', questions=questions, user_questions=user_questions)
 
 
-@app.route('/user/<user_name>')
+@app.route('/user/<user_name>', methods=['GET', 'POST'])
 def show_user_profile(user_name):
+    question_form = QuestionForm()
     users = User.query.filter_by(name=user_name).all()
-    user = None if len(users) == 0 else users[0]
-    return render_template('user_profile.html', user=user)
+    if len(users) == 0:
+        user = None
+    else:
+        user = users[0]
+        if question_form.validate_on_submit():
+            print('question : {}'.format(question_form.question.data))
+            question = Question(detail=question_form.question.data, user_id=user.id)
+            db.session.add(question)
+            db.session.commit()
+    return render_template('user_profile.html', user=user, form=question_form)
 
 
 @app.route('/logout')
