@@ -4,9 +4,9 @@
 <body>
 
     {% if current_user.is_authenticated %}
-    <li><a href="{{ url_for('logout') }}">ログアウト</a></li>
+    <li><a href="{{ url_for('dashboard') }}">質問一覧</a> / <a href="{{ url_for('logout') }}">ログアウト</a> / <a href="{{ url_for('show_user_profile',user_name=current_user.name) }}">マイページ</a></li>
     {% else %}
-    <li><a href="{{ url_for('login') }}">ログイン</a></li>
+    <li><a href="{{ url_for('dashboard') }}">質問一覧</a> / <a href="{{ url_for('login') }}">ログイン</a></li>
     {% endif %}
     <div>
         {% if questions %}
