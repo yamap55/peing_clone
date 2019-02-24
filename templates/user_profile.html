@@ -41,7 +41,19 @@
                     {% for q in user.questions %}
                     <tr>
                         <td>{{q.detail}}</td>
-                        <td>{{q.answer}}</td>
+                        <td>
+                            {% if current_user.id == q.user.id and not q.answer%}
+                            to answer!
+                            <form action="{{ url_for('answer') }}" method="POST">
+                                {{ form.csrf_token }}
+                                <input type="hidden" value="{{q.id}}" name="question_id" id="question_id"/>
+                                <input type="text" id="answer" name="answer"/>
+                                <input type="submit" value="answer">
+                            </form>
+                            {% else %}
+                            {{q.answer}}
+                            {% endif %}
+                        </td>
                     </tr>
                     {% endfor %}
                 </table>

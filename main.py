@@ -8,6 +8,7 @@ from models.question import Question
 from database import init_db, db
 from forms.login_form import LoginForm
 from forms.question_form import QuestionForm
+from forms.answer_form import AnswerForm
 from util.hash_util import create_salt, calculate_password_hash, compare_password
 
 app = Flask(__name__)
@@ -108,6 +109,19 @@ def show_user_profile(user_name):
             db.session.add(question)
             db.session.commit()
     return render_template('user_profile.html', user=user, form=question_form)
+
+
+@app.route('/answer', methods=['POST'])
+def answer():
+    answer_form = AnswerForm()
+    # 存在しない質問に回答する事、本人以外が回答する事は考慮しない
+    question = Question.query.filter_by(id=answer_form.question_id.data)[0]
+    if answer_form.validate_on_submit():
+        question.answer = answer_form.answer.data
+        db.session.add(question)
+        db.session.commit()
+    user = question.user
+    return render_template('user_profile.html', user=user, form=QuestionForm())
 
 
 @app.route('/logout')
