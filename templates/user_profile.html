@@ -1,61 +1,55 @@
-<!DOCTYPE html>
-<html lang="ja">
-<head></head>
-<body>
-    {% if current_user.is_authenticated %}
-    <li><a href="{{ url_for('dashboard') }}">質問一覧</a> / <a href="{{ url_for('logout') }}">ログアウト</a> / <a href="{{ url_for('show_user_profile',user_name=current_user.name) }}">マイページ</a></li>
-    {% else %}
-    <li><a href="{{ url_for('dashboard') }}">質問一覧</a> / <a href="{{ url_for('login') }}">ログイン</a></li>
-    {% endif %}
-    <div>
-        {% if user %}
-            <div>
-                <h3>question please!</h3>
-                <form action="{{ url_for('show_user_profile',user_name=user.name) }}" method="POST">
-                     {{ form.csrf_token }}
-                     {{ form.question }}
-                     <input type="submit" value="question">
-                </form>
-            </div>
-            <div>
-                <h3>user info</h3>
+{% extends "base.html" %}
+
+{% block title %}login{% endblock %}
+
+{% block content %}
+    {% if user %}
+        <h1>{{user.name}} profile</h1>
+        <div>
+            <h3>question please!</h3>
+            <form action="{{ url_for('show_user_profile',user_name=user.name) }}" method="POST">
+                 {{ form.csrf_token }}
+                 {{ form.question }}
+                 <input type="submit" value="question">
+            </form>
+        </div>
+        <div>
+            <h3>user info</h3>
+            <table border="1">
+                <tr>
+                    <th>key</th>
+                    <th>value</th>
+                </tr>
+                <tr>
+                    <td>id</td>
+                    <td>{{user.id}}</td>
+                </tr>
+                <tr>
+                    <td>name</td>
+                    <td>{{user.name}}</td>
+                </tr>
+            </table>
+        </div>
+        <div>
+            {% if user.questions %}
+                <h3>your questions</h3>
                 <table border="1">
                     <tr>
-                        <th>key</th>
-                        <th>value</th>
+                        <th>question</th>
+                        <th>answer</th>
                     </tr>
+                    {% for q in user.questions %}
                     <tr>
-                        <td>id</td>
-                        <td>{{user.id}}</td>
+                        <td>{{q.detail}}</td>
+                        <td>{{q.answer}}</td>
                     </tr>
-                    <tr>
-                        <td>name</td>
-                        <td>{{user.name}}</td>
-                    </tr>
+                    {% endfor %}
                 </table>
-            </div>
-            <div>
-                {% if user.questions %}
-                    <h3>your questions</h3>
-                    <table border="1">
-                        <tr>
-                            <th>question</th>
-                            <th>answer</th>
-                        </tr>
-                        {% for q in user.questions %}
-                        <tr>
-                            <td>{{q.detail}}</td>
-                            <td>{{q.answer}}</td>
-                        </tr>
-                        {% endfor %}
-                    </table>
-                {% else %}
-                    <p>question not found. question please!</p>
-                {% endif %}
-            </div>
-        {% else %}
-        <a>user not found. <a href="{{ url_for('dashboard') }}">question list is here!</a></p>
-        {% endif %}
-    </div>
-</body>
-</html>
+            {% else %}
+                <p>question not found. question please!</p>
+            {% endif %}
+        </div>
+    {% else %}
+    <p><a>user not found. <a href="{{ url_for('dashboard') }}">question list is here!</a></p>
+    {% endif %}
+{% endblock %}

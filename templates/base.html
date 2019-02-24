@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <!-- <link rel="stylesheet" href="style.css" /> -->
+    {% block head %}
+    <title>{% block title %}{% endblock %} - Peing Clone</title>
+    {% endblock %}
+</head>
+<body>
+    {% block contents_header %}
+    <header>
+        {% if current_user.is_authenticated %}
+        <a href="{{ url_for('dashboard') }}">質問一覧</a> / <a href="{{ url_for('logout') }}">ログアウト</a> / <a href="{{ url_for('show_user_profile',user_name=current_user.name) }}">マイページ</a>
+        {% else %}
+        <a href="{{ url_for('dashboard') }}">質問一覧</a> / <a href="{{ url_for('login') }}">ログイン</a>
+        {% endif %}
+    </header>
+    {% endblock %}
+    <hr/>
+    <div class="content">
+{% block content %}{% endblock %}
+    </div>
+    <hr/>
+    <footer>
+        {% block footer %}
+        &copy; Copyright 2019 by <a href="https://github.com/yamap55/peing_clone">yamap55</a>.
+        {% endblock %}
+    </footer>
+</body>
+</html>
+
