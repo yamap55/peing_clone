@@ -11,18 +11,6 @@ from forms.question_form import QuestionForm
 from forms.answer_form import AnswerForm
 from util.hash_util import create_salt, calculate_password_hash, compare_password
 
-app = Flask(__name__)
-# セッションを使うためにシークレットキーが必要です
-app.secret_key = 'secret key'
-db_name = 'test.db'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///{}'.format(db_name)
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
-if os.path.exists(db_name):
-    os.remove(db_name)
-
-init_db(app)
-app.app_context().push()
-
 
 def add_user():
 
@@ -44,12 +32,28 @@ def add_user():
     db.session.commit()
 
 
-add_user()
+def create_app():
+    app = Flask(__name__)
+    # セッションを使うためにシークレットキーが必要です
+    app.secret_key = 'secret key'
+    db_name = 'test.db'
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///{}'.format(db_name)
+    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
+    if os.path.exists(db_name):
+        os.remove(db_name)
 
-# flask-loginを設定
-login_manager = LoginManager()
-login_manager.init_app(app)
-login_manager.login_view = 'login'
+    init_db(app)
+    app.app_context().push()
+    add_user()
+
+    # flask-loginを設定
+    manager = LoginManager()
+    manager.init_app(app)
+    manager.login_view = 'login'
+    return app, manager
+
+
+app, login_manager = create_app()
 
 
 @login_manager.user_loader
@@ -136,4 +140,4 @@ if __name__ == '__main__':
         print('{}, {}, {}, {}'.format(u.id, u.name, u.password_hash, u.salt, u.created_at, u.updated_at))
         print(u.questions)
 
-    app.run()
+    app.run(debug=True)
